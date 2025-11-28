@@ -16,5 +16,5 @@ model Usuarios {
   nome     String
   email    String @unique
   senha    String
-  foto     String?
+  foto     String? @db.LongText
 }
