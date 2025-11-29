@@ -1,5 +1,5 @@
-const LinhaService = require('../services/LinhaService');
-const linhaService = require('../services/LinhaService')
+const linhaService = require('../services/LinhaService');
+const interacaoService = require('../services/InteracaoService');
 
 class LinhaController {
     register = async (req, res) => {
@@ -15,9 +15,21 @@ class LinhaController {
 
     search = async (req, res) => {
         const termo = req.body.termo || req.query.termo;
+        const userId = req.userId;
 
         try {
             const results = await linhaService.searchLinha(termo);
+            
+            console.log(userId);
+
+            if (results.length > 0 && userId) {
+                const promessas = results.map(result => 
+                    interacaoService.registrarAcesso(userId, result.id)
+                );
+                console.log(promessas);
+                await Promise.all(promessas);
+                console.log(`[Auto-Histórico] ${results.length} linhas salvas para o user ${userId}`);
+            }
             return res.json(results);
         }
         catch (error) {
