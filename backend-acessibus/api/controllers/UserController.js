@@ -12,7 +12,6 @@ class UserController {
             if (error.message === "Já existe um usuário com este email") {
                 return res.status(400).json({ error: error.message });
             }
-            console.log(error)
             return res.status(500).json({ error: "Erro interno do servidor" })
         }
     }
